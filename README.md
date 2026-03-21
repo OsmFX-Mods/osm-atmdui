@@ -6,6 +6,8 @@
 
 A DUI-based ATM system for FiveM that renders a realistic banking interface directly onto in-game ATM textures. Framework agnostic with support for QBCore, ESX, and Qbox.
 
+[![Watch the Showcase](https://img.shields.io/badge/YouTube-Watch%20Showcase-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/ZNTA8WO24S0)
+
 > **Pro Tip:** Elevate your server's experience with more premium resources at [OsmFX Mods](https://osmfxmods.com). Join our [Discord](https://discord.gg/R8gdEmgRtz) for exclusive updates, and consider dropping a server boost for prioritized support!
 
 ## Quickstart Guide
