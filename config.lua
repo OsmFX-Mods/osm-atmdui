@@ -1,7 +1,7 @@
 Config = {}
 
 -- Framework detection: 'auto', 'qbcore', 'esx', 'qbox'
-Config.Framework = 'qbcore'
+Config.Framework = 'auto'
 Config.Debug = false -- Enable debug prints
 
 -- ATM Models that will have DUI applied
