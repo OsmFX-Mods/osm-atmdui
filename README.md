@@ -2,6 +2,7 @@
 
 [![OsmFX Mods Official Store](https://img.shields.io/badge/OsmFx%20Mods%20Official%20Store-FF8C00?style=for-the-badge&logo=shopify&logoColor=white)](https://osmfxmods.com)
 [![Discord](https://img.shields.io/discord/889011029600780348?color=5865F2&label=Join%20our%20Discord&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/R8gdEmgRtz)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/osmfx)
 
 A DUI-based ATM system for FiveM that renders a realistic banking interface directly onto in-game ATM textures. Framework agnostic with support for QBCore, ESX, and Qbox.
