@@ -11,12 +11,13 @@ function cn(...inputs: ClassValue[]) {
 type ScreenType = 
   | 'none' | 'welcome' | 'card_insert' | 'pin_entry' | 'main_menu'
   | 'withdraw' | 'withdraw_amount' | 'deposit' | 'transfer_account'
-  | 'transfer_amount' | 'balance' | 'success' | 'receipt_prompt' | 'card_eject' | 'receipt_view';
+  | 'transfer_amount' | 'balance' | 'success' | 'receipt_prompt' | 'card_eject' | 'receipt_view' | 'no_card';
 
 interface SessionData {
   playerName: string;
   bankBalance: number;
   quickAmounts: number[];
+  pinTitle?: string;
 }
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
           setHighlighted('');
           if (data.screen === 'pin_entry') {
               setPinDots(0);
+              setSession(s => ({...s, pinTitle: data.data?.title || "ENTER PIN CODE"}));
           } else if (data.screen === 'welcome') {
               setPinDots(0);
               setInputValue('0');
@@ -282,7 +284,7 @@ export default function App() {
 
       {/* Grid container mapping precisely to 4 mechanical ATM buttons per side */}
       {/* We use a grid mapped evenly between top 18% and bottom 18% of screen for correct Gabz-prop / Default-prop ATM alignment. */}
-      {screen !== 'welcome' && screen !== 'card_insert' && screen !== 'card_eject' && screen !== 'success' && screen !== 'pin_entry' && (
+      {screen !== 'welcome' && screen !== 'card_insert' && screen !== 'card_eject' && screen !== 'success' && (
         <>
             <div className="absolute top-[1%] bottom-[1%] left-2 w-[25%] py-[2vh] grid grid-rows-4 items-center z-30 gap-[1vh]">
                {/* Left slots */}
@@ -300,6 +302,9 @@ export default function App() {
                {screen === 'receipt_prompt' && (
                  <SideBtn id="side_l1" position={1} label="Print" icon={FileText} indexObj="1" />
                )}
+               {screen === 'no_card' && (
+                 <SideBtn id="side_l4" position={4} label="Cancel" icon={LogOut} indexObj="ESC" accent />
+               )}
             </div>
             <div className="absolute top-[1%] bottom-[1%] right-0 w-[25%] py-[2vh] grid grid-rows-4 items-center z-30 gap-[1vh]">
                {/* Right slots */}
@@ -313,10 +318,10 @@ export default function App() {
                    <SideBtn id="side_r4" position={4} label="Return" icon={LogOut} indexObj="ESC" right accent />
                  </>
                )}
-               {(screen === 'withdraw_amount' || screen === 'deposit' || screen === 'transfer_amount' || screen === 'transfer_account') && (
+               {(screen === 'withdraw_amount' || screen === 'deposit' || screen === 'transfer_amount' || screen === 'transfer_account' || screen === 'pin_entry') && (
                  <>
                    <SideBtn id="side_r3" position={3} label={screen === 'transfer_account' ? "Next" : "Confirm"} icon={CheckCircle2} indexObj="OK" right />
-                   <SideBtn id="side_r4" position={4} label="Cancel" icon={LogOut} indexObj="CX" right accent />
+                   {screen !== 'pin_entry' && <SideBtn id="side_r4" position={4} label="Cancel" icon={LogOut} indexObj="CX" right accent />}
                  </>
                )}
                {screen === 'balance' && (
@@ -324,6 +329,9 @@ export default function App() {
                )}
                {screen === 'receipt_prompt' && (
                  <SideBtn id="side_r4" position={4} label="No Print" icon={LogOut} indexObj="NO" right accent />
+               )}
+               {screen === 'no_card' && (
+                 <SideBtn id="side_r4" position={4} label="Get Card" icon={CheckCircle2} indexObj="NEW" right />
                )}
             </div>
         </>
@@ -388,7 +396,7 @@ export default function App() {
               <div className="bg-[#0f172a]/95 border-x-[1px] border-y-[4px] border-b-slate-800 border-t-cyan-500 border-x-slate-800 p-[6vh] rounded-[3vw] shadow-2xl flex flex-col items-center w-[45%] backdrop-blur-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[50px]" />
                 <ShieldCheck size={72} className="text-cyan-400 mb-6" strokeWidth={1.5} />
-                <h2 className="font-display font-semibold text-[3.5vh] text-slate-300 mb-[4vh] tracking-widest">ENTER PIN CODE</h2>
+                <h2 className="font-display font-semibold text-[3.5vh] text-slate-300 mb-[4vh] tracking-widest">{session.pinTitle || "ENTER PIN CODE"}</h2>
                 
                 <div className="flex gap-[2vw] mb-[3vh] justify-center">
                   {[0, 1, 2, 3].map(i => (
@@ -518,6 +526,20 @@ export default function App() {
             <div className="absolute top-[20%] bottom-[12%] left-[26%] right-[26%] flex flex-col justify-center items-center z-20">
                 <FileText size={100} className="text-slate-700 mb-[4vh]" strokeWidth={1} />
                 <h2 className="font-display font-black text-[5vh] text-white uppercase tracking-widest mb-[2vh]">Print Receipt?</h2>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── NO CARD ────────────────────────────────────────────── */}
+        {screen === 'no_card' && (
+          <motion.div key="no_card" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0 z-20 pt-[15%]">
+            <TopHeader title="Card Required" />
+            <div className="absolute top-[20%] bottom-[12%] left-[26%] right-[26%] flex flex-col justify-center items-center z-20">
+              <CreditCard size={100} className="text-red-500 mb-[4vh] animate-pulse" strokeWidth={1} />
+              <h2 className="font-display font-black text-[4vh] text-white uppercase tracking-widest text-center mb-[2vh]">CARD NOT DETECTED</h2>
+              <p className="text-slate-400 text-[2vh] text-center max-w-[80%]">
+                You need a bank card to access ATM services it seems. Would you like to issue a new card now? It will cost you an issuing fee.
+              </p>
             </div>
           </motion.div>
         )}
